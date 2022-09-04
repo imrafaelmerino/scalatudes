@@ -3,8 +3,7 @@ import scala.collection.immutable
 import scala.collection.immutable.Seq
 import types.Grid
 import decorators.*
-import etudes.RemoveIslands.Pos
-object RemoveIslands extends App:
+object RemoveIslands:
 
   type Matrix = Seq[Seq[Int]]
   type Pos = (Int,Int)
@@ -26,7 +25,7 @@ object RemoveIslands extends App:
       neighbors(pos,visited).find(isConnected(_, visited.updated(pos,true)))
                             .isDefined
     
-    def isConnected(pos:Pos, visited: Map[Pos, Boolean]):Boolean =
+    def isConnected(pos:Pos, visited: Map[Pos, Boolean]=Map.empty.withDefaultValue(false)):Boolean =
       matrix(pos._1)(pos._2) == 1 && (isEdge(pos) || anyNeighborConnected(pos, visited))
 
 
@@ -35,7 +34,7 @@ object RemoveIslands extends App:
         if row.isEmpty then acc
         else
           val pos = row.head
-          if isConnected(pos,Map.empty.withDefaultValue(false))
+          if isConnected(pos)
           then iterRow(row.tail, acc :+ 1)
           else iterRow(row.tail, acc :+ 0)
       if matrix.isEmpty
@@ -46,3 +45,6 @@ object RemoveIslands extends App:
 
 
     iterMatrix(matrix)
+
+
+

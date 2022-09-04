@@ -10,8 +10,8 @@ case class Pos(x:Int, y:Int):
 
   def -(a: Pos): Pos = Pos(a.x - x, a.y - y)
 
-  def neighbors: Set[Pos] =
-    Set(Pos(x + 1, y), Pos(x - 1, y), Pos(x, y + 1),
+  def neighbors: Seq[Pos] =
+    Seq(Pos(x + 1, y), Pos(x - 1, y), Pos(x, y + 1),
         Pos(x, y - 1), Pos(x + 1, y + 1), Pos(x + 1, y - 1), 
         Pos(x - 1, y + 1), Pos(x - 1, y - 1)
        )

@@ -16,6 +16,7 @@ import scala.io.Source
  */
 case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
 
+  def apply(pos:Pos):T = points(pos)
   override def iterator:Iterator[(Pos,T)] = points.iterator
 
   def withDefaultValue(value:T):Grid[T] = Grid[T](points.withDefaultValue(value))
@@ -148,7 +149,7 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
    * neighbors of the given pos that exist in the grid
    * @param pos the position
    */
-  def neighbors(pos: Pos): Set[Pos] = pos.neighbors.filter(points.contains)
+  def neighbors(pos: Pos): Seq[Pos] = pos.neighbors.filter(points.contains)
 
   def translate(x: Int, y: Int): Grid[T] = Grid(points.map((p, v) => (Pos(p.x + x, p.y + y), v)))
 
@@ -198,17 +199,17 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
    * @param separator
    * @param predicate
    */
-  def print(separator: String = ""): Unit =
-    toRows.foreach(row => println(row.map(_._2).mkString(separator)))
 
+  def printGrid(): Unit =
+    for (y <- ymin to ymax) {
+      for(x <- xmin to xmax){
+        if points.contains(Pos(x,y))
+        then print(points(Pos(x,y)))
+        else print(".")
+      }
+      println()
+    }
 
-  /**
-   * print the grid ( a column per line in ascending x order)
-   * @param separator
-   * @param predicate
-   */
-  def printColumns(separator: String = ""): Unit =
-    toColumns.foreach(column => println(column.map(_._2).mkString(separator)))
 
   /**
    *
@@ -219,11 +220,12 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
     val outer = Grid.from_gen(xmin - columns._1 to xmax + columns._2,
                               ymin - rows._1 to ymax + rows._2)
                              (_ => Some(value))
+
     outer ++ this
 
 
 object Grid:
-
+  
   def empty[T] = Grid[T](Map.empty)
 
   /**
@@ -287,7 +289,7 @@ object Grid:
       def update(pos:Pos,opt:Option[T]) = opt.fold(grid)(grid + (pos,_))
       val value = gen(Pos(x, y))
       if x == x_end && y == y_end then update(Pos(x,y),value)
-      else if x == x_end then point_rec(0, y + 1, update(Pos(x,y),value))
+      else if x == x_end then point_rec(x_range.start, y + 1, update(Pos(x,y),value))
       else point_rec(x + 1, y, update(Pos(x,y),value))
 
     point_rec(x_range.start, y_range.start, empty)

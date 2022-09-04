@@ -8,6 +8,9 @@ lazy val root = (project in file("."))
     name := "scala-bazaar",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.12" % Test,
     libraryDependencies += "org.scalacheck" % "scalacheck_2.13" % "1.16.0",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.12" % Test,
+    libraryDependencies += "org.scalacheck" % "scalacheck_2.13" % "1.16.0" % Test,
+
   )
 
 

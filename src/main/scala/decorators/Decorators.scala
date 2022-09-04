@@ -9,20 +9,25 @@ private[decorators] def toString(o:Any,
     if o.size > iterNPrinted then
        s"Map of size ${o.size}. First ${iterNPrinted} elements: \n${o.take(iterNPrinted).toSeq.map((k, v) => s"$k -> ${toString(v)}").mkString("\n")}"
     else
-      s"Map of size ${o.size}: \n${o.take(iterNPrinted).toSeq.map((k, v) => s"$k -> ${toString(v)}").mkString("\n")}"
+      s"Map of size ${o.size}: \n${o.toSeq.map((k, v) => s"$k -> ${toString(v)}").mkString("\n")}"
+  
   def iter2String(o:Iterable[_]):String=
     if o.size > iterNPrinted then
       s"Iterable of size ${o.size}. First ${iterNPrinted} elements:\n${o.take(iterNPrinted).map(toString(_)).mkString("\n")}"
     else
-      s"Iterable of size ${o.size}:\n${o.take(iterNPrinted).map(toString(_)).mkString("\n")}"
+      s"Iterable of size ${o.size}:\n${o.map(toString(_)).mkString("\n")}"
+  
   o match
     case o:scala.collection.Map[_,_] => map2String(o)
     case o:Iterable[_] => iter2String(o)
     case o:Any => o.toString
 
-private[decorators] val callingMessage:String=>String = name => s"${Instant.now()}: Calling function '$name' with arguments:"
-private[decorators] val returningMessage:(String,Any) => String = (name,result) => s"${Instant.now()}: '$name' returned: ${toString(result)}\n"
-private[decorators] val argumentMessage: (Int,Any) => String = (n,arg) => s"#${n}: ${toString(arg)}"
+private[decorators] val callingMessage:String=>String = name => 
+  s"${Instant.now()}: Calling function '$name' with arguments:"
+private[decorators] val returningMessage:(String,Any) => String = (name,result) => 
+  s"${Instant.now()}: '$name' returned: ${toString(result)}\n"
+private[decorators] val argumentMessage: (Int,Any) => String = (n,arg) => 
+  s"#${n}: ${toString(arg)}"
 
 private[decorators] var statistics_maps = mutable.Map[String,Decorator]()
 
