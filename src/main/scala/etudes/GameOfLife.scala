@@ -4,7 +4,17 @@ import types.Pos
 import decorators.*
 import scala.collection.immutable.Set
 import scala.io.Source
-object GameOfLife:
+
+/**
+ * 
+ * @param cellSymbol cells die and turn into empty symbols
+ * @param emptySymbol cell are born and empty symbols turn into cell symbols
+ */
+class GameOfLife(val cellSymbol:String="\u03BF", val emptySymbol:String = " "):
+  
+  /**
+   * represent an empty space that can be turned into a cell
+   */
   extension (grid:Grid[String]){
 
     /**
@@ -15,68 +25,60 @@ object GameOfLife:
      *
      * @return
      */
-    def expandDesert: Grid[String] =
-      val up = if grid.top.count(_._2 == CELL) > 0 then 1 else 0
-      val down = if grid.bottom.count(_._2 == CELL) > 0 then 1 else 0
-      val right = if grid.right.count(_._2 == CELL) > 0 then 1 else 0
-      val left = if grid.left.count(_._2 == CELL) > 0 then 1 else 0
-      grid.fill((down, up), (left, right), BLANK)
-    def countNeighborCells(pos: Pos):Int =
-      grid.neighbors(pos)
-          .count(grid(_) == CELL)
 
-    def getCells: Iterator[(Pos,String)] =
-      grid.iterator.filter(_._2 == CELL)
+    def expand: Grid[String] =
+      val extraTopRow= grid.top.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraBottomRow = grid.bottom.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraRightColumn = grid.right.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraLeftColumn = grid.left.find(_._2 == cellSymbol).fold(0)(_=>1)
+
+      grid.fill((extraBottomRow, extraTopRow ),
+                (extraLeftColumn , extraRightColumn),
+                 emptySymbol
+               )
+
+    /**
+     * given a position, it returns all its neighbors that contain a cell
+     * @param pos the position
+     * @return all the cells at adjacent positions
+     */
+    def countNeighborCells(pos: Pos):Int = grid.neighbors(pos).count(grid(_) == cellSymbol) /**
+     *
+     * @return all the cells of a grid
+     */
+    def getCells: Iterator[(Pos,String)] = grid.iterator.filter(_._2 == cellSymbol)
   }
 
-
-  private val BLANK = " "
-  private val CELL = "\u03BF"
-
-
-  def gen(grid:Grid[String]):LazyList[Grid[String]] =
-    val a = deaths(grid)
-    val b = births(grid)
-    val new_generation = (a ++ b).expandDesert
+  /**
+   * returns a stream of generations
+   * @param dessert the initial state
+   * @return
+   */
+  def gen(dessert:Grid[String]):LazyList[Grid[String]] =
+    val expanded = dessert.expand
+    val removedDeaths = removeDeaths(expanded)
+    val newBirths = births(expanded)
+    val new_generation = removedDeaths ++ newBirths
     new_generation #:: gen(new_generation)
 
-  //only the new births
-  def births(grid:Grid[String]):Grid[String] =
+  def births(dessert:Grid[String]):Grid[String] =
     val candidates:Set[Pos] =
-      grid.getCells
-          .flatMap((pos,_)=> grid.neighbors(pos))
-          .filter(grid(_) == BLANK)
+      dessert.getCells
+          .flatMap((pos,_)=> dessert.neighbors(pos))
+          .filter(dessert(_) == emptySymbol)
           .toSet
-    val b = candidates.filter(grid.countNeighborCells(_) == 3)
-    if b.isEmpty
-    then Grid.empty
-    else Grid(b.map((_, CELL)).toMap)
+    val newBirths: Set[Pos] = candidates.filter(dessert.countNeighborCells(_) == 3)
 
-
+    Grid(newBirths.map((_, cellSymbol)).toMap)
+  
 
   //the generation minus the deaths
-  def deaths(grid:Grid[String]):Grid[String] =
+  def removeDeaths(grid:Grid[String]):Grid[String] =
     val cells: Seq[(Pos, String)] = grid.getCells.toSeq
-    val d = cells.map(_._1).filter(pos => {
+    val deaths = cells.map(_._1).filter(pos => {
       val n = grid.countNeighborCells(pos)
       n < 2 || n > 3
     })
+    grid ++ deaths.map((_,emptySymbol))
 
-
-    grid ++ d.map((_,BLANK))
-
-
-
-
-  @main
-  def main:Unit =
-    val grid = Grid.parseFile2Grid("/Users/rmerino/Projects/scalatudes/src/main/chess_board.txt")
-
-    grid.printRows(default = BLANK)
-    println()
-
-    gen(grid.expandDesert).take(10).foreach(g=> {
-      g.printRows(default = BLANK,ignoreDefaultLines = true)
-      println(" "*100)
-    })
 

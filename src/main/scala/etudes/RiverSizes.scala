@@ -37,14 +37,4 @@ object RiverSizes:
 
     solve(positions)
 
-  /*@main
-  def main: Unit =
-    val matrix = List(
-      List(1, 0, 0, 1, 0),
-      List(1, 0, 1, 0, 0),
-      List(0, 0, 1, 0, 1),
-      List(1, 0, 1, 0, 1),
-      List(1, 0, 1, 1, 0)
-    )
 
-    println(rivers(matrix))*/

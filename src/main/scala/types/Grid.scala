@@ -248,7 +248,7 @@ object Grid:
    * @param path the path of the file
    * @return a list of grids
    * */
-  def parseFile2Grids(path: String): Seq[Grid[String]] =
+  def parseFileToSeq(path: String): Seq[Grid[String]] =
     val file = File(path)
     assert(file.exists(), s"File $file doesnt exist.")
     def parse(lines: Seq[String], grid_rows: Seq[Seq[String]], result: Seq[Grid[String]]): Seq[Grid[String]] =
@@ -266,7 +266,7 @@ object Grid:
    * @param path the path of the file
    * @return a Grid
    */
-  def parseFile2Grid(path: String): Grid[String] =
+  def parseFile(path: String): Grid[String] =
     val file = File(path)
     assert(file.exists(), s"File $file doesnt exist.")
     Grid.fromRows(Source.fromFile(file).getLines.toSeq.map(_.split("")))

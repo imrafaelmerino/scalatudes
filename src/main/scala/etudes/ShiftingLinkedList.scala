@@ -10,14 +10,27 @@ object ShiftingLinkedList:
       if next == null 
       then s"$head" 
       else s"$head -> $next"
+
+    override def equals(obj: Any): Boolean =
+      obj match
+        case other:LinkedList =>
+          if next == null then
+            if other.next !=null then false
+            else head == other.head
+          else
+            if other.next == null  then false
+            else head == other.head && next == other.next
+
+        case _ => false
   end LinkedList    
   
   object LinkedList:
     def from(n: Int*) =
       def appendAll(head: LinkedList, seq: Seq[Int]): LinkedList =
         if seq.isEmpty then head 
-        else head.next = new LinkedList(seq.head)
-        appendAll(head.next, seq.tail)
+        else
+          head.next = new LinkedList(seq.head)
+          appendAll(head.next, seq.tail)
   
       val head = new LinkedList(n.head)
       appendAll(head, n.tail)

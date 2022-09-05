@@ -6,22 +6,26 @@ Write a function that returns an array of the sizes of all rivers represented in
 
 ### Sample Input
 
-matrix = \[
-\[1, 0, 0, 1, 0\],
-\[1, 0, 1, 0, 0\],
-\[0, 0, 1, 0, 1\],
-\[1, 0, 1, 0, 1\],
-\[1, 0, 1, 1, 0\],
-\]
+1, 0, 0, 1, 0
+
+1, 0, 1, 0, 0
+
+0, 0, 1, 0, 1
+
+1, 0, 1, 0, 1
+
+1, 0, 1, 1, 0
+
 
 ### Sample Output
 
-\[1, 2, 2, 2, 5\] // The numbers could be ordered differently.
+// The numbers could be ordered differently.
+[1, 2, 2, 2, 5\] 
+
 // The rivers can be clearly seen here:
-// \[
-//   \[1,  ,  , 1,  \],
-//   \[1,  , 1,  ,  \],
-//   \[ ,  , 1,  , 1\],
-//   \[1,  , 1,  , 1\],
-//   \[1,  , 1, 1,  \],
-// \]
+
+1,  ,  , 1,  
+1,  , 1,  ,  
+,  ,  1,  , 1,
+1,  , 1,  , 1,
+1,  , 1, 1,  ,

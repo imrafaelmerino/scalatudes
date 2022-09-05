@@ -12,19 +12,30 @@ We call islands to these blocks of white pixels not connected to the borders.
 
 ### Sample Input
 
+
 1,0,0,0,0,0
+
 0,1,0,1,1,1
+
 0,0,1,0,1,0
+
 1,1,0,0,1,0
+
 1,0,1,1,0,0
+
 1,0,0,0,0,1
 
 
 ### Sample Output
 
 1,0,0,0,0,0
+
 0,0,0,1,1,1
+
 0,0,0,0,1,0
+
 1,1,0,0,1,0
+
 1,0,0,0,0,0
+
 1,0,0,0,0,1

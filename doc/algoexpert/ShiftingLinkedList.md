@@ -16,10 +16,12 @@ You can assume that the input Linked List will always have at least one node; in
 words, the head will never be None / null.
 
 ### Sample Input
+// the head node with value 0
+head = 0 -> 1 -> 2 -> 3 -> 4 -> 5 
 
-head = 0 -> 1 -> 2 -> 3 -> 4 -> 5 // the head node with value 0
 k = 2
 
 ### Sample Output
 
-4 -> 5 -> 0 -> 1 -> 2 -> 3 // the new head node with value 4
+// the new head node with value 4
+4 -> 5 -> 0 -> 1 -> 2 -> 3
