@@ -5,7 +5,7 @@ import org.scalatest.matchers.should
 
 class RemoveIslandsTest extends AnyFlatSpec with should.Matchers {
 
-  "" should "" in {
+  "remove islands" should "remove block os 1 not connected to the borders" in {
     val rows = Seq(
       Seq(1, 0, 0, 0, 0, 0),
       Seq(0, 1, 0, 1, 1, 1),
@@ -24,7 +24,7 @@ class RemoveIslandsTest extends AnyFlatSpec with should.Matchers {
       Seq(1, 0, 0, 0, 0, 1)
     )
 
-    RemoveIslands.removeIslands(rows).sorted should be(expected)
+    RemoveIslands.removeIslands(rows) should be(expected)
 
 
   }
