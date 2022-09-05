@@ -3,7 +3,7 @@ package types
 import scala.annotation.tailrec
 import scala.util.Try
 import types.Pos
-
+import scala.collection.mutable
 import java.io.File
 import scala.collection.immutable
 import scala.collection.immutable.Set
@@ -152,7 +152,8 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
   def neighbors(pos: Pos): Seq[Pos] = pos.neighbors.filter(points.contains)
 
   def translate(x: Int, y: Int): Grid[T] = Grid(points.map((p, v) => (Pos(p.x + x, p.y + y), v)))
-
+  
+  def transpose = Grid(points.map(p => (Pos(p._1.y,p._1.x),p._2)))
 
   /**
    * 1110
@@ -186,29 +187,30 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
 
     rec(centers, Grid.empty)
 
-  def toColumns: Seq[Seq[(Pos,T)]] =
+  def getColumns: Seq[Seq[(Pos,T)]] =
     points.groupBy(_._1.x).toSeq.sortBy(_._1).map(_._2.toSeq.sortBy(_._1.y))
 
-  def toRows: Seq[Seq[(Pos,T)]] =
+  def getRows: Seq[Seq[(Pos,T)]] =
     points.groupBy(_._1.y).toSeq.sortBy(_._1).map(_._2.toSeq.sortBy(_._1.x))
 
 
   /**
-   * print the grid ( a row per line in ascending y order).
-   * Take into account that y > 0 is downwards on the console
-   * @param separator
-   * @param predicate
+   * print the grid, a row per line in ascending y order (y > 0 is downwards on the console)
+   * @param separator the character separator, empty by default
+   * @param default if the grid misses some point, this character will be printed instead (whitespace by default)
+   * @param ignoreDefaultLines lines with only the default character are not printed
    */
-
-  def printGrid(): Unit =
-    for (y <- ymin to ymax) {
-      for(x <- xmin to xmax){
-        if points.contains(Pos(x,y))
-        then print(points(Pos(x,y)))
-        else print(".")
-      }
-      println()
-    }
+    
+  def printRows(default:String=" ", ignoreDefaultLines:Boolean=false, separator:String=""): Unit =
+    for (y <- ymin to ymax)
+      val chars = mutable.ArrayBuffer[String]()
+      for(x <- xmin to xmax)
+        val ch:String =
+                 if points.contains(Pos(x,y))
+                 then points(Pos(x,y)).toString
+                 else default
+        chars.append(ch)
+      if !ignoreDefaultLines || chars.find(_!= default).nonEmpty then println(chars.mkString(separator))
 
 
   /**
@@ -217,7 +219,7 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
    * @param rows    (rows to the left, rows to the right)
    * @return */
   def fill(rows: (Int, Int), columns: (Int, Int), value: T): Grid[T] =
-    val outer = Grid.from_gen(xmin - columns._1 to xmax + columns._2,
+    val outer = Grid.fromGen(xmin - columns._1 to xmax + columns._2,
                               ymin - rows._1 to ymax + rows._2)
                              (_ => Some(value))
 
@@ -251,11 +253,11 @@ object Grid:
     assert(file.exists(), s"File $file doesnt exist.")
     def parse(lines: Seq[String], grid_rows: Seq[Seq[String]], result: Seq[Grid[String]]): Seq[Grid[String]] =
       if lines.isEmpty
-      then result :+ Grid.rows(grid_rows)
+      then result :+ Grid.fromRows(grid_rows)
       else
         val head = lines.head
         if head.isBlank
-        then parse(lines.tail, Seq(), result :+ Grid.rows(grid_rows))
+        then parse(lines.tail, Seq(), result :+ Grid.fromRows(grid_rows))
         else parse(lines.tail, grid_rows.appended(head.split("")), result)
     parse(Source.fromFile(file).getLines.toSeq, Seq(), Seq())
 
@@ -267,19 +269,19 @@ object Grid:
   def parseFile2Grid(path: String): Grid[String] =
     val file = File(path)
     assert(file.exists(), s"File $file doesnt exist.")
-    Grid.rows(Source.fromFile(file).getLines.toSeq.map(_.split("")))
+    Grid.fromRows(Source.fromFile(file).getLines.toSeq.map(_.split("")))
 
-  def columns[T](columns: Seq[Seq[T]]): Grid[T] =
+  def fromColumns[T](columns: Seq[Seq[T]]): Grid[T] =
     val xs = 0 until columns.size
     val ys = 0 until columns.map(_.length).max
-    from_gen[T](xs, ys)(pos => Try(columns(pos.x)(pos.y)).toOption)
+    fromGen[T](xs, ys)(pos => Try(columns(pos.x)(pos.y)).toOption)
 
-  def rows[T](rows: Seq[Seq[T]]): Grid[T] =
+  def fromRows[T](rows: Seq[Seq[T]]): Grid[T] =
     val xs = 0 until rows.map(_.length).max
     val ys = 0 until rows.size
-    from_gen[T](xs,ys)(pos => Try(rows(pos.y)(pos.x)).toOption)
+    fromGen[T](xs,ys)(pos => Try(rows(pos.y)(pos.x)).toOption)
 
-  def from_gen[T](x_range: Range, y_range: Range)(gen: Pos => Option[T]): Grid[T] =
+  def fromGen[T](x_range: Range, y_range: Range)(gen: Pos => Option[T]): Grid[T] =
     assertRange(x_range)
     assertRange(y_range)
     val x_end = if x_range.isInclusive then x_range.end else x_range.end - 1

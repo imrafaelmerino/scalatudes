@@ -2,6 +2,8 @@ package decorators
 import java.time.{Duration, Instant}
 import scala.collection.mutable
 
+private[decorators] var statistics_maps = mutable.Map[String,Decorator]()
+
 
 private[decorators] def toString(o:Any,
                                  iterNPrinted:Int=10):String =
@@ -29,7 +31,6 @@ private[decorators] val returningMessage:(String,Any) => String = (name,result) 
 private[decorators] val argumentMessage: (Int,Any) => String = (n,arg) => 
   s"#${n}: ${toString(arg)}"
 
-private[decorators] var statistics_maps = mutable.Map[String,Decorator]()
 
 private[decorators] def printMap(map:mutable.Map[_,_],
                                  keyPrinter:Any=>String= key => s"  $key",

@@ -4,3 +4,6 @@
 target/
 project/target/
 .DS_Store
+out/
+out
+src/main/scalatudes.iml
