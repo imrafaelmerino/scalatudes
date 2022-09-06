@@ -20,6 +20,3 @@ particular programming skills.
 | [ShiftingLinkedList.scala](/src/main/scala/etudes/ShiftingLinkedList.scala) | *Given a matrix of 0 and 1, where 1 represents rivers, a function that returns sizes of all rivers*        | [documentation](/doc/algoexpert/ShiftingLinkedList.md)         |
 | [RemoveIslands.scala](/src/main/scala/etudes/RemoveIslands.scala)           | *Given a matrix of 0 and 1, remove the blocks of 1 not connected to the borders (called aislands)*         | [documentation](/doc/algoexpert/RiversSize.md)
 | [GameOfLife.scala](/src/main/scala/etudes/GameOfLife.scala)                 | *[Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)*                           | [documentation](/doc/GameOfLife.md)
-
-
-# Interesting facts 
