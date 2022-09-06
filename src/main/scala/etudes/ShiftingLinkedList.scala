@@ -36,15 +36,18 @@ object ShiftingLinkedList:
       appendAll(head, n.tail)
       head
   end LinkedList
-  
+
+
+  // the problem beings here. Previous code is supposed to be given
   def shift(head: LinkedList, k: Int): LinkedList = 
     if k == 0 then return head
   
     def getLast(head: LinkedList): LinkedList = if head.next == null then head else getLast(head.next)
   
     def getPrevious(head: LinkedList, current: LinkedList): LinkedList = 
-     if current == head then null 
-      else 
+     if current == head 
+     then null 
+     else 
        if head.next == current 
        then head 
         else getPrevious(head.next, current)

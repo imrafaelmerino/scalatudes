@@ -29,33 +29,34 @@ case class Grid[T](points: Map[Pos,T]) extends Iterable[(Pos,T)]:
 
   /**
    * four corners of the grid: (xmin, ymin), (xmin, ymax), (xmax, ymin) and (xmax, ymax) and their values
+   * 
    */
   lazy val corners: Seq[(Pos,T)] =
     val a = Pos(xmin, ymin)
     val b = Pos(xmin, ymax)
     val c = Pos(xmax, ymin)
     val d = Pos(xmax, ymax)
-    Seq((a,points(a)), (b,points(b)), (c,points(c)), (d,points(d)))
+    Set(a,b,c,d).map(pos=>(pos,points(pos))).toSeq
 
   /**
    * positions such that y == ymax and their values sorted by the y coordinate in ascending order
    */
-  lazy val top: Seq[(Pos,T)] = points.filter(_._1.y == ymax).toSeq.sortBy(_._1.x)
+  lazy val topBorder: Seq[(Pos,T)] = points.filter(_._1.y == ymax).toSeq.sortBy(_._1.x)
 
   /**
    * positions such that y == ymin and their values sorted by the x coordinate in ascending order
    * */
-  lazy val bottom: Seq[(Pos,T)] = points.filter(_._1.y == ymin).toSeq.sortBy(_._1.x)
+  lazy val bottomBorder: Seq[(Pos,T)] = points.filter(_._1.y == ymin).toSeq.sortBy(_._1.x)
 
   /**
    * positions such that x == xmax and their values sorted by the y coordinate in ascending order
    * */
-  lazy val right: Seq[(Pos,T)] = points.filter(_._1.x == xmax).toSeq.sortBy(_._1.y)
+  lazy val rightBorder: Seq[(Pos,T)] = points.filter(_._1.x == xmax).toSeq.sortBy(_._1.y)
 
   /**
    * positions such that x == xmin and their values sorted by the y coordinate in ascending order
    * */
-  lazy val left: Seq[(Pos,T)] = points.filter(_._1.x == xmin).toSeq.sortBy(_._1.y)
+  lazy val leftBorder: Seq[(Pos,T)] = points.filter(_._1.x == xmin).toSeq.sortBy(_._1.y)
 
   /**
    * x coordinates of al the positions of the grid

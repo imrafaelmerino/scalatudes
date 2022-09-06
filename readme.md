@@ -1,7 +1,6 @@
 <img src="./logo.jpeg" alt="logo"/>
 
 
-
 # Scalatudes
 
 I got this idea from [Peter Norvig](https://github.com/norvig). As he explains:

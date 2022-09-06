@@ -25,3 +25,11 @@ k = 2
 
 // the new head node with value 4
 4 -> 5 -> 0 -> 1 -> 2 -> 3
+
+### How to solve it
+
+ - Create a function that shift one position
+   - One position to the right means: the last one becomes the first one and the first one the second one.
+   - One position to the left means: the first one becomes the last one and the last one the second last
+ - To shift k positions just call the function k time using recursion
+ - This problem is very easy to solve programming with a functional style

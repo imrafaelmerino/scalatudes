@@ -8,21 +8,17 @@ import scala.annotation.tailrec
 case class Pos(x:Int, y:Int):
   def +(a: Pos): Pos = Pos(a.x + x, a.y + y)
 
-  def -(a: Pos): Pos = Pos(a.x - x, a.y - y)
+  def -(a: Pos): Pos = Pos(x - a.x, y - a.y)
 
-  def neighbors: Seq[Pos] =
-    Seq(Pos(x + 1, y), Pos(x - 1, y), Pos(x, y + 1),
-        Pos(x, y - 1), Pos(x + 1, y + 1), Pos(x + 1, y - 1), 
-        Pos(x - 1, y + 1), Pos(x - 1, y - 1)
-       )
+  def neighbors: Seq[Pos] = Seq(right, left, up, down, up.right, right.down, left.up, left.down)
 
-  def right = Pos(x + 1, y)
+  def right = this + Pos(1,0)
 
-  def left = Pos(x - 1, y)
+  def left = this - Pos(1,0)
 
-  def up = Pos(x, y + 1)
+  def up = this + Pos(0,1)
 
-  def down = Pos(x, y - 1)
+  def down = this - Pos(0,1)
 
   def manhattan_distance(pos1: Pos): Int = (x - pos1.x).abs + (y - pos1.y).abs
 

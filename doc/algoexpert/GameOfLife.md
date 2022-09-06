@@ -26,6 +26,8 @@ Statement of the Theme
 Write a program that simulates a LIFE community. The input should be the initial positions 
 of the community’s cells, and the output an aerial view of the community at each generation.
 
-Find the 9th and 10th generation for the initial:
+Find the 9th and 10th generation being the first one the following:
 
 οοοοο οοοοο οοοοο
+
+

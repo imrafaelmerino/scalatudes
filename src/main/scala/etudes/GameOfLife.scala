@@ -27,10 +27,10 @@ class GameOfLife(val cellSymbol:String="\u03BF", val emptySymbol:String = " "):
      */
 
     def expand: Grid[String] =
-      val extraTopRow= grid.top.find(_._2 == cellSymbol).fold(0)(_=>1)
-      val extraBottomRow = grid.bottom.find(_._2 == cellSymbol).fold(0)(_=>1)
-      val extraRightColumn = grid.right.find(_._2 == cellSymbol).fold(0)(_=>1)
-      val extraLeftColumn = grid.left.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraTopRow= grid.topBorder.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraBottomRow = grid.bottomBorder.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraRightColumn = grid.rightBorder.find(_._2 == cellSymbol).fold(0)(_=>1)
+      val extraLeftColumn = grid.leftBorder.find(_._2 == cellSymbol).fold(0)(_=>1)
 
       grid.fill((extraBottomRow, extraTopRow ),
                 (extraLeftColumn , extraRightColumn),
