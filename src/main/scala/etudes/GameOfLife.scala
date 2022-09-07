@@ -6,12 +6,12 @@ import scala.collection.immutable.Set
 import scala.io.Source
 
 /**
- * 
+ *
  * @param cellSymbol cells die and turn into empty symbols
  * @param emptySymbol cell are born and empty symbols turn into cell symbols
  */
 class GameOfLife(val cellSymbol:String="\u03BF", val emptySymbol:String = " "):
-  
+
   /**
    * represent an empty space that can be turned into a cell
    */
@@ -70,7 +70,7 @@ class GameOfLife(val cellSymbol:String="\u03BF", val emptySymbol:String = " "):
     val newBirths: Set[Pos] = candidates.filter(dessert.countNeighborCells(_) == 3)
 
     Grid(newBirths.map((_, cellSymbol)).toMap)
-  
+
 
   //the generation minus the deaths
   def removeDeaths(grid:Grid[String]):Grid[String] =
@@ -80,5 +80,6 @@ class GameOfLife(val cellSymbol:String="\u03BF", val emptySymbol:String = " "):
       n < 2 || n > 3
     })
     grid ++ deaths.map((_,emptySymbol))
+
 
 
